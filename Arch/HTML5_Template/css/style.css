@@ -5156,8 +5156,9 @@ body.box {
 
 .parallax--ser-li {
     padding: 125px 0;
-    background-image: url('../img/bg-head-04.jpg');
-    background-position: 50% 85%;
+    background-image: url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-position: center center;
+    background-size: cover;
 }
 
 .service-list {
