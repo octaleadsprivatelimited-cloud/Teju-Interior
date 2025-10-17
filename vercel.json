@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Arch/HTML5_Template/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/Arch/HTML5_Template/index.html"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/Arch/HTML5_Template/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/Arch/HTML5_Template/js/$1"
+    },
+    {
+      "src": "/img/(.*)",
+      "dest": "/Arch/HTML5_Template/img/$1"
+    },
+    {
+      "src": "/font/(.*)",
+      "dest": "/Arch/HTML5_Template/font/$1"
+    },
+    {
+      "src": "/vendor/(.*)",
+      "dest": "/Arch/HTML5_Template/vendor/$1"
+    },
+    {
+      "src": "/(.*\\.html)",
+      "dest": "/Arch/HTML5_Template/$1"
+    }
+  ]
+}
