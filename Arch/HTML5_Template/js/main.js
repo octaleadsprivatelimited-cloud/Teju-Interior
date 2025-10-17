@@ -579,4 +579,23 @@
     $("html, body").animate({ scrollTop: 0 }, 600);
     return false;
   });
+  
+  // Global image enhancements: lazy loading + fallback
+  $(function () {
+    // Apply lazy loading to all images not explicitly set
+    $('img').each(function () {
+      var $img = $(this);
+      if (!$img.attr('loading')) {
+        $img.attr('loading', 'lazy');
+      }
+      // Fallback: if an image fails to load, replace with a generic local placeholder
+      $img.on('error', function () {
+        // Prevent infinite loop if fallback also fails
+        if ($img.data('fallback-applied')) return;
+        $img.data('fallback-applied', true);
+        $img.attr('src', 'img/gallery-01.jpg');
+        $img.attr('alt', $img.attr('alt') || 'Placeholder image');
+      });
+    });
+  });
 })(jQuery);
