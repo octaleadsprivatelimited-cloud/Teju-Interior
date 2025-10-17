@@ -1,70 +1,45 @@
 #!/usr/bin/env python3
 """
-Navigation Update Script for Teju Interior Website
-This script updates all navigation menus to remove dead links and keep only the required pages.
+Script to update navigation menus in all HTML pages
 """
 
 import os
 import re
+from pathlib import Path
 
-# Pages to keep
-KEEP_PAGES = [
-    'index4.html',           # Home Page 4
-    'project-4col-v2.html',  # Project 4 v2
-    'service-list.html',     # Services List
-    'blog-3col.html',        # Blog 3 Column
-    'portfolio-detail-v1.html', # Portfolio v1
-    'about-us.html',         # About Us
-    'testimonial.html',      # Testimonials
-    'our-process.html',      # Our Process
-    'contact.html'           # Contact
-]
-
-def update_navigation_in_file(filepath):
-    """Update navigation menu in a single HTML file"""
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            content = f.read()
-        
-        # Update Home menu - remove submenu, keep only Home Page 4
-        home_pattern = r'<li class="li-has-sub">\s*<a href="[^"]*">\s*Home\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        home_replacement = '''<li>
-              <a href="index4.html">
+# Define the consistent navigation structure
+CONSISTENT_NAV = '''        <nav class="menu-desktop pull-right">
+          <ul class="ul--inline ul--no-style">
+            <li>
+              <a href="home.html">
                 Home
               </a>
-            </li>'''
-        content = re.sub(home_pattern, home_replacement, content, flags=re.DOTALL)
-        
-        # Update Projects menu - keep only Project 4 v2
-        projects_pattern = r'<li class="li-has-sub">\s*<a href="[^"]*">\s*Projects\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        projects_replacement = '''<li>
-              <a href="project-4col-v2.html">
-                Projects
+            </li>
+            <li>
+              <a href="project.html">
+                Project
               </a>
-            </li>'''
-        content = re.sub(projects_pattern, projects_replacement, content, flags=re.DOTALL)
-        
-        # Update Services menu - keep only Services List
-        services_pattern = r'<li class="li-has-sub">\s*<a href="[^"]*">\s*Services\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        services_replacement = '''<li>
-              <a href="service-list.html">
+            </li>
+            <li>
+              <a href="services.html">
                 Services
               </a>
-            </li>'''
-        content = re.sub(services_pattern, services_replacement, content, flags=re.DOTALL)
-        
-        # Update Pages menu - keep only required pages
-        pages_pattern = r'<li class="li-has-sub">\s*<a href="">\s*Pages\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        pages_replacement = '''<li class="li-has-sub">
+            </li>
+            <li>
+              <a href="portfolio.html">
+                Portfolio
+              </a>
+            </li>
+            <li>
+              <a href="blog.html">
+                Blog
+              </a>
+            </li>
+            <li class="li-has-sub">
               <a href="">
                 Pages
               </a>
               <ul class="sub-menu ul--no-style">
-                <li>
-                  <a href="portfolio-detail-v1.html">
-                    Portfolio Detail v1
-                  </a>
-                </li>
                 <li>
                   <a href="about-us.html">
                     About Us
@@ -72,7 +47,7 @@ def update_navigation_in_file(filepath):
                 </li>
                 <li>
                   <a href="testimonial.html">
-                    Testimonial
+                    Testimonials
                   </a>
                 </li>
                 <li>
@@ -81,68 +56,205 @@ def update_navigation_in_file(filepath):
                   </a>
                 </li>
               </ul>
-            </li>'''
-        content = re.sub(pages_pattern, pages_replacement, content, flags=re.DOTALL)
-        
-        # Update Blog menu - keep only Blog 3 Column
-        blog_pattern = r'<li class="li-has-sub">\s*<a href="[^"]*">\s*Blog\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        blog_replacement = '''<li>
-              <a href="blog-3col.html">
+            </li>
+            <li>
+              <a href="contact.html">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>'''
+
+CONSISTENT_MOBILE_NAV = '''        <nav class="menu-mobile hidden">
+          <ul class="ul--no-style">
+            <li>
+              <a href="home.html">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="project.html">
+                Project
+              </a>
+            </li>
+            <li>
+              <a href="services.html">
+                Services
+              </a>
+            </li>
+            <li>
+              <a href="portfolio.html">
+                Portfolio
+              </a>
+            </li>
+            <li>
+              <a href="blog.html">
                 Blog
               </a>
-            </li>'''
-        content = re.sub(blog_pattern, blog_replacement, content, flags=re.DOTALL)
-        
-        # Remove Shop menu entirely
-        shop_pattern = r'<li class="li-has-sub">\s*<a href="[^"]*">\s*Shop\s*</a>\s*<ul class="sub-menu ul--no-style">.*?</ul>\s*</li>'
-        content = re.sub(shop_pattern, '', content, flags=re.DOTALL)
-        
-        # Update Contact link
-        content = re.sub(r'href="contact\.html"', 'href="contact.html"', content)
-        
-        # Update logo links to point to index4.html
-        content = re.sub(r'href="index\.html"', 'href="index4.html"', content)
-        
-        # Write updated content back to file
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
-        
-        print(f"✅ Updated navigation in: {filepath}")
-        return True
-        
-    except Exception as e:
-        print(f"❌ Error updating {filepath}: {str(e)}")
-        return False
+            </li>
+            <li>
+              <i class="fa fa-plus menu-mobile__more"></i>
+              <a href="">
+                Pages
+              </a>
+              <ul class="ul--no-style hidden">
+                <li>
+                  <a href="about-us.html">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="testimonial.html">
+                    Testimonials
+                  </a>
+                </li>
+                <li>
+                  <a href="our-process.html">
+                    Our Process
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="contact.html">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>'''
+
+CONSISTENT_DESKTOP_NAV = '''        <nav class="menu-desktop menu-desktop--show pull-right">
+          <ul class="ul--inline ul--no-style">
+            <li>
+              <a href="home.html">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="project.html">
+                Project
+              </a>
+            </li>
+            <li>
+              <a href="services.html">
+                Services
+              </a>
+            </li>
+            <li>
+              <a href="portfolio.html">
+                Portfolio
+              </a>
+            </li>
+            <li>
+              <a href="blog.html">
+                Blog
+              </a>
+            </li>
+            <li class="li-has-sub">
+              <a href="">
+                Pages
+              </a>
+              <ul class="sub-menu ul--no-style">
+                <li>
+                  <a href="about-us.html">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="testimonial.html">
+                    Testimonials
+                  </a>
+                </li>
+                <li>
+                  <a href="our-process.html">
+                    Our Process
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="contact.html">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>'''
+
+CONSISTENT_FOOTER_LINKS = '''              <ul class="ul--inline ul--footer">
+                <li>
+                  <a href="services.html">Services</a>
+                </li>
+                <li>
+                  <a href="portfolio.html">Portfolio</a>
+                </li>
+                <li>
+                  <a href="blog.html">Blog</a>
+                </li>
+                <li>
+                  <a href="about-us.html">About Us</a>
+                </li>
+                <li>
+                  <a href="contact.html">Contact</a>
+                </li>
+              </ul>'''
+
+def update_navigation_in_file(file_path):
+    """Update navigation in a single HTML file"""
+    print(f"Updating navigation in {file_path}")
+    
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Update logo links
+    content = re.sub(r'href="index4\.html"', 'href="home.html"', content)
+    
+    # Update header stick navigation
+    header_stick_pattern = r'<nav class="menu-desktop pull-right">.*?</nav>'
+    content = re.sub(header_stick_pattern, CONSISTENT_NAV, content, flags=re.DOTALL)
+    
+    # Update mobile navigation
+    mobile_nav_pattern = r'<nav class="menu-mobile hidden">.*?</nav>'
+    content = re.sub(mobile_nav_pattern, CONSISTENT_MOBILE_NAV, content, flags=re.DOTALL)
+    
+    # Update desktop navigation
+    desktop_nav_pattern = r'<nav class="menu-desktop menu-desktop--show pull-right">.*?</nav>'
+    content = re.sub(desktop_nav_pattern, CONSISTENT_DESKTOP_NAV, content, flags=re.DOTALL)
+    
+    # Update footer links
+    footer_pattern = r'<ul class="ul--inline ul--footer">.*?</ul>'
+    content = re.sub(footer_pattern, CONSISTENT_FOOTER_LINKS, content, flags=re.DOTALL)
+    
+    # Update breadcrumb links
+    content = re.sub(r'href="index4\.html"', 'href="home.html"', content)
+    
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    
+    print(f"Updated {file_path}")
 
 def main():
-    """Main function to update all navigation menus"""
-    print("🔄 Updating navigation menus across all pages...")
-    print("=" * 60)
+    """Main function to update all HTML files"""
+    template_dir = Path("Arch/HTML5_Template")
     
-    # Get all HTML files in the template directory
-    template_dir = "Arch/HTML5_Template"
-    html_files = [f for f in os.listdir(template_dir) if f.endswith('.html')]
+    if not template_dir.exists():
+        print("Template directory not found!")
+        return
     
-    success_count = 0
-    total_count = len(html_files)
+    html_files = list(template_dir.glob("*.html"))
+    
+    if not html_files:
+        print("No HTML files found!")
+        return
+    
+    print(f"Found {len(html_files)} HTML files to update")
     
     for html_file in html_files:
-        filepath = os.path.join(template_dir, html_file)
-        if update_navigation_in_file(filepath):
-            success_count += 1
+        try:
+            update_navigation_in_file(html_file)
+        except Exception as e:
+            print(f"Error updating {html_file}: {e}")
     
-    print("=" * 60)
-    print(f"📊 Navigation Update Summary:")
-    print(f"✅ Successfully updated: {success_count}/{total_count} files")
-    print("\n🎯 Navigation changes:")
-    print("• Home: Simplified to single link (Home Page 4)")
-    print("• Projects: Simplified to single link (Project 4 v2)")
-    print("• Services: Simplified to single link (Services List)")
-    print("• Pages: Kept only required pages (Portfolio, About, Testimonial, Process)")
-    print("• Blog: Simplified to single link (Blog 3 Column)")
-    print("• Shop: Removed entirely")
-    print("• Contact: Kept as single link")
-    print("\n🎉 Navigation cleanup completed!")
+    print("Navigation update completed!")
 
 if __name__ == "__main__":
     main()
