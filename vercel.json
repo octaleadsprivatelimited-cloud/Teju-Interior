@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/",
-      "dest": "/Arch/HTML5_Template/index.html"
+      "dest": "/Arch/HTML5_Template/index4.html"
     },
     {
       "src": "/css/(.*)",
